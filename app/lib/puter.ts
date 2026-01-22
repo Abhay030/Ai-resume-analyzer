@@ -121,8 +121,9 @@ export const usePuterStore = create<PuterStore>((set, get) => {
                 checkAuthStatus: get().auth.checkAuthStatus,
                 getUser: get().auth.getUser,
             },
-        });
-    };
+        });};
+
+    
 
     // Check if user is signed in and update store
     const checkAuthStatus = async (): Promise<boolean> => {
