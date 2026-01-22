@@ -155,7 +155,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - GitHub: [@Abhay030](https://github.com/Abhay030)
 - Project Link: [https://github.com/Abhay030/Ai-resume-analyzer](https://github.com/Abhay030/Ai-resume-analyzer)
-- Live Demo: [https://puter.com/app/ai-resume-analyzer-142](https://puter.com/app/ai-resume-analyzer-142)
+- Live Demo: [https://puter.com/app/ai-resume-analyzer-142](https://ai-resume-analyzer-142-tapyk.puter.site/)
 
 ## 🙏 Acknowledgments
 
