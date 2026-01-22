@@ -1,6 +1,6 @@
-import { usePuterStore } from "~/lib/puter";
-import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router";
+import {usePuterStore} from "~/lib/puter";
+import {useEffect} from "react";
+import {useLocation, useNavigate} from "react-router";
 
 export const meta = () => ([
     { title: 'Resumind | Auth' },
@@ -13,12 +13,9 @@ const Auth = () => {
     const next = location.search.split('next=')[1];
     const navigate = useNavigate();
 
-    // if the user is authenticated, redirect to the next page or home
     useEffect(() => {
-        if (auth.isAuthenticated) {
-            navigate(next || '/');
-        }
-    }, [auth.isAuthenticated, next, navigate])
+        if(auth.isAuthenticated) navigate(next);
+    }, [auth.isAuthenticated, next])
 
     return (
         <main className="bg-[url('/images/bg-auth.svg')] bg-cover min-h-screen flex items-center justify-center">
