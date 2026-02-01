@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ScoreGauge from '~/components/ScoreGauge';
 
 interface JobMatchProps {
@@ -7,6 +7,19 @@ interface JobMatchProps {
 }
 
 const JobMatch: React.FC<JobMatchProps> = ({ jobMatch, jobTitle }) => {
+    const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
+
+    // Copy rewrite to clipboard
+    const copyToClipboard = async (text: string, idx: number) => {
+        try {
+            await navigator.clipboard.writeText(text);
+            setCopiedIdx(idx);
+            setTimeout(() => setCopiedIdx(null), 2000);
+        } catch (err) {
+            console.error('Failed to copy:', err);
+        }
+    };
+
     // Determine gradient based on verdict
     const gradientClass = jobMatch.jobFitVerdict === 'Strong'
         ? 'from-blue-100'
@@ -81,6 +94,95 @@ const JobMatch: React.FC<JobMatchProps> = ({ jobMatch, jobTitle }) => {
                     </div>
                 )}
             </div>
+
+            {/* Repetition Alerts */}
+            {jobMatch.repetitions && jobMatch.repetitions.length > 0 && (
+                <div className="mb-6">
+                    <h3 className="text-lg font-semibold text-amber-700 mb-3 flex items-center gap-2">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        Repetition Detected
+                    </h3>
+                    <div className="space-y-3">
+                        {jobMatch.repetitions.map((rep, idx) => (
+                            <div key={idx} className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                                <div className="flex items-start gap-3">
+                                    <span className="bg-amber-200 text-amber-800 text-xs font-bold px-2 py-1 rounded">
+                                        {rep.repeatedConcept}
+                                    </span>
+                                </div>
+                                <p className="text-gray-700 mt-2 text-sm italic border-l-2 border-amber-300 pl-3">
+                                    "{rep.originalBullet}"
+                                </p>
+                                <p className="text-amber-800 mt-2 text-sm font-medium">
+                                    💡 {rep.suggestion}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* Weak Bullet Points with Rewrites */}
+            {jobMatch.weakBullets && jobMatch.weakBullets.length > 0 && (
+                <div className="mb-6">
+                    <h3 className="text-lg font-semibold text-indigo-700 mb-3 flex items-center gap-2">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        Suggested Rewrites
+                    </h3>
+                    <div className="space-y-4">
+                        {jobMatch.weakBullets.map((bullet, idx) => (
+                            <div key={idx} className="bg-white border border-indigo-200 rounded-lg overflow-hidden shadow-sm">
+                                {/* Issue Badge */}
+                                <div className="bg-indigo-50 px-4 py-2 border-b border-indigo-100">
+                                    <span className="text-indigo-600 text-xs font-medium">
+                                        Issue: {bullet.issue}
+                                    </span>
+                                </div>
+
+                                {/* Before/After Comparison */}
+                                <div className="p-4 space-y-3">
+                                    {/* Original */}
+                                    <div>
+                                        <span className="text-xs font-bold text-red-500 uppercase tracking-wide">Before</span>
+                                        <p className="text-gray-600 text-sm mt-1 line-through decoration-red-300">
+                                            {bullet.original}
+                                        </p>
+                                    </div>
+
+                                    {/* Rewrite */}
+                                    <div>
+                                        <span className="text-xs font-bold text-green-500 uppercase tracking-wide">After</span>
+                                        <div className="flex items-start gap-2 mt-1">
+                                            <p className="text-gray-800 text-sm font-medium flex-1">
+                                                {bullet.rewrite}
+                                            </p>
+                                            <button
+                                                onClick={() => copyToClipboard(bullet.rewrite, idx)}
+                                                className="shrink-0 p-1.5 text-indigo-500 hover:bg-indigo-50 rounded transition-colors"
+                                                title="Copy to clipboard"
+                                            >
+                                                {copiedIdx === idx ? (
+                                                    <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                    </svg>
+                                                ) : (
+                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                                    </svg>
+                                                )}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
 
             {/* Job-Specific Suggestions */}
             {jobMatch.jobSpecificSuggestions.length > 0 && (

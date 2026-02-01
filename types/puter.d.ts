@@ -91,6 +91,20 @@ interface AIResponse {
     via_ai_chat_service: boolean;
 }
 
+// Repetition issue detected in resume bullets
+interface RepetitionIssue {
+    originalBullet: string;    // The repeated bullet point
+    repeatedConcept: string;   // What concept is being repeated
+    suggestion: string;        // How to fix (consolidate, remove, or diversify)
+}
+
+// Weak bullet point with job-specific rewrite
+interface WeakBulletPoint {
+    original: string;          // Original weak bullet point
+    issue: string;             // Why it's weak (vague, no metrics, passive voice, etc.)
+    rewrite: string;           // Job-specific rewritten version
+}
+
 // Job match analysis result
 interface JobMatchResult {
     jobMatchPercentage: number; // 0-100
@@ -98,4 +112,6 @@ interface JobMatchResult {
     missingKeywords: string[];
     jobFitVerdict: "Poor" | "Moderate" | "Strong";
     jobSpecificSuggestions: string[];
+    repetitions: RepetitionIssue[];    // Detected repetitive bullet points (max 3)
+    weakBullets: WeakBulletPoint[];    // Weak but relevant bullet points with rewrites (max 5)
 }
