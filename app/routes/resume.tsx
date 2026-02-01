@@ -1,9 +1,10 @@
-import {Link, useNavigate, useParams} from "react-router";
-import {useEffect, useState} from "react";
-import {usePuterStore} from "~/lib/puter";
+import { Link, useNavigate, useParams } from "react-router";
+import { useEffect, useState } from "react";
+import { usePuterStore } from "~/lib/puter";
 import Summary from "~/components/Summary";
 import ATS from "~/components/ATS";
 import Details from "~/components/Details";
+import JobMatch from "~/components/JobMatch";
 
 export const meta = () => ([
     { title: 'Resumind | Review ' },
@@ -16,34 +17,38 @@ const Resume = () => {
     const [imageUrl, setImageUrl] = useState('');
     const [resumeUrl, setResumeUrl] = useState('');
     const [feedback, setFeedback] = useState<Feedback | null>(null);
+    const [jobMatch, setJobMatch] = useState<JobMatchResult | null>(null);
+    const [jobTitle, setJobTitle] = useState<string>('');
     const navigate = useNavigate();
 
     useEffect(() => {
-        if(!isLoading && !auth.isAuthenticated) navigate(`/auth?next=/resume/${id}`);
+        if (!isLoading && !auth.isAuthenticated) navigate(`/auth?next=/resume/${id}`);
     }, [isLoading])
 
     useEffect(() => {
         const loadResume = async () => {
             const resume = await kv.get(`resume:${id}`);
 
-            if(!resume) return;
+            if (!resume) return;
 
             const data = JSON.parse(resume);
 
             const resumeBlob = await fs.read(data.resumePath);
-            if(!resumeBlob) return;
+            if (!resumeBlob) return;
 
             const pdfBlob = new Blob([resumeBlob], { type: 'application/pdf' });
             const resumeUrl = URL.createObjectURL(pdfBlob);
             setResumeUrl(resumeUrl);
 
             const imageBlob = await fs.read(data.imagePath);
-            if(!imageBlob) return;
+            if (!imageBlob) return;
             const imageUrl = URL.createObjectURL(imageBlob);
             setImageUrl(imageUrl);
 
             setFeedback(data.feedback);
-            console.log({resumeUrl, imageUrl, feedback: data.feedback });
+            setJobMatch(data.jobMatch || null);
+            setJobTitle(data.jobTitle || '');
+            console.log({ resumeUrl, imageUrl, feedback: data.feedback, jobMatch: data.jobMatch });
         }
 
         loadResume();
@@ -76,6 +81,9 @@ const Resume = () => {
                     {feedback ? (
                         <div className="flex flex-col gap-8 animate-in fade-in duration-1000">
                             <Summary feedback={feedback} />
+                            {jobMatch && (
+                                <JobMatch jobMatch={jobMatch} jobTitle={jobTitle} />
+                            )}
                             <ATS score={feedback.ATS.score || 0} suggestions={feedback.ATS.tips || []} />
                             <Details feedback={feedback} />
                         </div>

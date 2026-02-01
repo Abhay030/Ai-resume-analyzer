@@ -13,7 +13,7 @@
 
 ## ✨ Features
 
-- � **PDF Upload & Analysis** - Upload your resume and get instant AI-powered feedback
+- 📄 **PDF Upload & Analysis** - Upload your resume and get instant AI-powered feedback
 - 🤖 **AI-Powered Insights** - Powered by Claude Sonnet 4 for intelligent resume analysis
 - 📊 **Comprehensive Scoring** - Get scores for:
   - ATS Compatibility
@@ -21,12 +21,16 @@
   - Content Quality
   - Structure & Format
   - Skills Presentation
-- � **Actionable Tips** - Receive specific suggestions to improve your resume
+- 🎯 **Job Match Analysis** - Compare your resume against specific job descriptions:
+  - See which job keywords are matched vs. missing
+  - Get a job-specific fit score (separate from ATS score)
+  - Receive tailored suggestions for THIS specific job
+- 💡 **Actionable Tips** - Receive specific suggestions to improve your resume
 - 🎨 **Beautiful UI** - Modern, responsive design with smooth animations
 - ☁️ **Cloud Storage** - Secure resume storage powered by Puter.js
 - 🔄 **PDF to Image Conversion** - Automatic preview generation using PDF.js
 
-## �️ Tech Stack
+## 🛠️ Tech Stack
 
 - **Frontend Framework**: React 19 with React Router v7
 - **Language**: TypeScript

@@ -3,9 +3,10 @@ import Navbar from "~/components/Navbar";
 import FileUploader from "~/components/FileUploader";
 import { usePuterStore } from "~/lib/puter";
 import { useNavigate } from "react-router";
-import { convertPdfToImage } from "~/lib/pdf2img";
+import { convertPdfToImage, extractPdfText } from "~/lib/pdf2img";
 import { generateUUID } from "~/lib/utils";
 import { prepareInstructions } from "../../constants";
+import { analyzeJobMatch, type JobMatchResult } from "~/lib/jobMatchAnalyzer";
 
 const Upload = () => {
     const { auth, isLoading, fs, ai, kv } = usePuterStore();
@@ -43,12 +44,22 @@ const Upload = () => {
 
         setStatusText('Preparing data...');
         const uuid = generateUUID();
-        const data = {
+        const data: {
+            id: string;
+            resumePath: string;
+            imagePath: string;
+            companyName: string;
+            jobTitle: string;
+            jobDescription: string;
+            feedback: any;
+            jobMatch: JobMatchResult | null;
+        } = {
             id: uuid,
             resumePath: uploadedFile.path,
             imagePath: uploadedImage.path,
             companyName, jobTitle, jobDescription,
             feedback: '',
+            jobMatch: null,
         }
         await kv.set(`resume:${uuid}`, JSON.stringify(data));
 
@@ -65,6 +76,16 @@ const Upload = () => {
             : feedback.message.content[0].text;
 
         data.feedback = JSON.parse(feedbackText);
+
+        // Run job match analysis in parallel with saving ATS feedback
+        setStatusText('Analyzing job fit...');
+        const resumeText = await extractPdfText(file);
+        if (resumeText && jobDescription) {
+            const jobMatchResult = await analyzeJobMatch(resumeText, jobTitle, jobDescription);
+            data.jobMatch = jobMatchResult;
+            console.log('Job match result:', jobMatchResult);
+        }
+
         await kv.set(`resume:${uuid}`, JSON.stringify(data));
         setStatusText('Analysis complete, redirecting...');
         console.log(data);

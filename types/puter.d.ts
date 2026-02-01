@@ -3,6 +3,17 @@
  * Provides authentication, file storage, AI services, and key-value storage
  */
 
+// Module declarations for pdfjs-dist
+declare module 'pdfjs-dist/build/pdf.mjs' {
+    const content: any;
+    export = content;
+}
+
+declare module 'pdfjs-dist/build/pdf.worker.mjs?url' {
+    const url: string;
+    export default url;
+}
+
 // File or directory metadata in cloud storage
 interface FSItem {
     id: string;
@@ -78,4 +89,13 @@ interface AIResponse {
         cost: number;
     }[];
     via_ai_chat_service: boolean;
+}
+
+// Job match analysis result
+interface JobMatchResult {
+    jobMatchPercentage: number; // 0-100
+    matchedKeywords: string[];
+    missingKeywords: string[];
+    jobFitVerdict: "Poor" | "Moderate" | "Strong";
+    jobSpecificSuggestions: string[];
 }

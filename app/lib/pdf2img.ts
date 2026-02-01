@@ -109,3 +109,35 @@ export async function convertPdfToImage(
         };
     }
 }
+
+/**
+ * Extracts text content from a PDF file
+ * Used for job match analysis
+ */
+export async function extractPdfText(file: File): Promise<string> {
+    try {
+        console.log('Loading PDF.js for text extraction...');
+        const lib = await loadPdfJs();
+
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await lib.getDocument({ data: arrayBuffer }).promise;
+
+        let fullText = '';
+
+        // Extract text from all pages
+        for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const textContent = await page.getTextContent();
+            const pageText = textContent.items
+                .map((item: any) => item.str)
+                .join(' ');
+            fullText += pageText + '\n';
+        }
+
+        console.log('Extracted text length:', fullText.length);
+        return fullText.trim();
+    } catch (err) {
+        console.error('PDF text extraction error:', err);
+        return '';
+    }
+}
