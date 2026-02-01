@@ -3,14 +3,14 @@ import Navbar from "../components/Navbar";
 import { resumes } from "../../constants";
 import ResumeCard from "~/components/ResumeCard";
 import { usePuterStore } from "~/lib/puter";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { useEffect } from "react";
 
 
 export function meta({ }: Route.MetaArgs) {
   return [
-    { title: "Resume Analyzer" },
-    { name: "description", content: "Smart Resume Optimizer" },
+    { title: "Dashboard | Resumind" },
+    { name: "description", content: "Track your resume analyses and ratings" },
   ];
 }
 
@@ -20,8 +20,9 @@ export default function Home() {
 
   // if the user tries to go the private route and is not authenticated, redirect to auth and then again redirect to the private route.
   useEffect(() => {
-    if (!auth.isAuthenticated) navigate('/auth?next=/');
+    if (!auth.isAuthenticated) navigate('/auth?next=/dashboard');
   }, [auth.isAuthenticated, navigate])
+
 
   return <main className="bg-[url('/images/bg-main.svg')] bg-cover" >
 
