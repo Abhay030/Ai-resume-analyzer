@@ -115,3 +115,12 @@ interface JobMatchResult {
     repetitions: RepetitionIssue[];    // Detected repetitive bullet points (max 3)
     weakBullets: WeakBulletPoint[];    // Weak but relevant bullet points with rewrites (max 5)
 }
+
+// Hireability analysis result - recruiter decision score
+interface HireabilityResult {
+    hireabilityIndex: number;  // 0-100 recruiter decision score
+    verdict: "Strong Shortlist" | "Borderline" | "Unlikely";
+    shortlistReasons: string[];  // 2-3 reasons why WOULD be shortlisted
+    rejectionRisks: string[];    // 2-3 reasons why MIGHT be rejected
+    topImprovements: string[];   // Prioritized concrete actions to improve hireability
+}

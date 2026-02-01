@@ -5,6 +5,7 @@ import Summary from "~/components/Summary";
 import ATS from "~/components/ATS";
 import Details from "~/components/Details";
 import JobMatch from "~/components/JobMatch";
+import HireabilityCard from "~/components/HireabilityCard";
 
 export const meta = () => ([
     { title: 'Resumind | Review ' },
@@ -18,6 +19,7 @@ const Resume = () => {
     const [resumeUrl, setResumeUrl] = useState('');
     const [feedback, setFeedback] = useState<Feedback | null>(null);
     const [jobMatch, setJobMatch] = useState<JobMatchResult | null>(null);
+    const [hireability, setHireability] = useState<HireabilityResult | null>(null);
     const [jobTitle, setJobTitle] = useState<string>('');
     const navigate = useNavigate();
 
@@ -47,8 +49,9 @@ const Resume = () => {
 
             setFeedback(data.feedback);
             setJobMatch(data.jobMatch || null);
+            setHireability(data.hireability || null);
             setJobTitle(data.jobTitle || '');
-            console.log({ resumeUrl, imageUrl, feedback: data.feedback, jobMatch: data.jobMatch });
+            console.log({ resumeUrl, imageUrl, feedback: data.feedback, jobMatch: data.jobMatch, hireability: data.hireability });
         }
 
         loadResume();
@@ -80,6 +83,10 @@ const Resume = () => {
                     <h2 className="text-4xl !text-black font-bold">Resume Review</h2>
                     {feedback ? (
                         <div className="flex flex-col gap-8 animate-in fade-in duration-1000">
+                            {/* Hireability Index - Most important, shown first */}
+                            {hireability && (
+                                <HireabilityCard hireability={hireability} jobTitle={jobTitle} />
+                            )}
                             <Summary feedback={feedback} />
                             {jobMatch && (
                                 <JobMatch jobMatch={jobMatch} jobTitle={jobTitle} />

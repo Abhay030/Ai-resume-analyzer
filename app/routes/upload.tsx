@@ -7,6 +7,7 @@ import { convertPdfToImage, extractPdfText } from "~/lib/pdf2img";
 import { generateUUID } from "~/lib/utils";
 import { prepareInstructions } from "../../constants";
 import { analyzeJobMatch, type JobMatchResult } from "~/lib/jobMatchAnalyzer";
+import { analyzeHireability, type HireabilityResult, type HireabilityInput } from "~/lib/hireabilityAnalyzer";
 
 const Upload = () => {
     const { auth, isLoading, fs, ai, kv } = usePuterStore();
@@ -53,6 +54,7 @@ const Upload = () => {
             jobDescription: string;
             feedback: any;
             jobMatch: JobMatchResult | null;
+            hireability: HireabilityResult | null;
         } = {
             id: uuid,
             resumePath: uploadedFile.path,
@@ -60,6 +62,7 @@ const Upload = () => {
             companyName, jobTitle, jobDescription,
             feedback: '',
             jobMatch: null,
+            hireability: null,
         }
         await kv.set(`resume:${uuid}`, JSON.stringify(data));
 
@@ -77,13 +80,38 @@ const Upload = () => {
 
         data.feedback = JSON.parse(feedbackText);
 
-        // Run job match analysis in parallel with saving ATS feedback
+        // Run job match analysis
         setStatusText('Analyzing job fit...');
         const resumeText = await extractPdfText(file);
         if (resumeText && jobDescription) {
             const jobMatchResult = await analyzeJobMatch(resumeText, jobTitle, jobDescription);
             data.jobMatch = jobMatchResult;
             console.log('Job match result:', jobMatchResult);
+
+            // Run hireability analysis with all collected signals
+            setStatusText('Calculating hireability...');
+            const hireabilityInput: HireabilityInput = {
+                atsScore: data.feedback?.ATS?.score || 0,
+                jobMatchScore: jobMatchResult?.jobMatchPercentage || 0,
+                jobMatchVerdict: jobMatchResult?.jobFitVerdict || 'Poor',
+                repetitionCount: jobMatchResult?.repetitions?.length || 0,
+                weakBulletCount: jobMatchResult?.weakBullets?.length || 0,
+                sectionScores: {
+                    tone: data.feedback?.scores?.['Tone & Style'] || 0,
+                    content: data.feedback?.scores?.Content || 0,
+                    skills: data.feedback?.scores?.Skills || 0,
+                    structure: data.feedback?.scores?.Structure || 0,
+                },
+                jobTitle,
+                jobDescription,
+                resumeText,
+                matchedKeywords: jobMatchResult?.matchedKeywords || [],
+                missingKeywords: jobMatchResult?.missingKeywords || [],
+            };
+
+            const hireabilityResult = await analyzeHireability(hireabilityInput);
+            data.hireability = hireabilityResult;
+            console.log('Hireability result:', hireabilityResult);
         }
 
         await kv.set(`resume:${uuid}`, JSON.stringify(data));
