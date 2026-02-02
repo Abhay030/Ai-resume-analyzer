@@ -1,18 +1,30 @@
-import React from 'react'
 import { Link } from 'react-router'
+import { motion } from 'framer-motion';
 
 const Navbar = () => {
     return (
-        <nav className='navbar'>
-            <Link to='/'>
-                <p className='text-2xl font-bold text-gradient'>Resume Analyzer</p>
-            </Link>
+        <nav className='fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100'>
+            <div className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
+                <Link to='/' className="flex items-center gap-3">
+                    <img
+                        src="/images/resumind-logo.png"
+                        alt="ResuMind"
+                        className="w-10 h-10 object-contain"
+                    />
+                    <span className='text-xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent'>
+                        ResuMind
+                    </span>
+                </Link>
 
-            <Link to='/upload' className='primary-button w-fit'>
-            Upload Resume
-            </Link>
-
-            
+                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <Link
+                        to='/upload'
+                        className='px-5 py-2.5 bg-gradient-to-b from-indigo-500 to-indigo-600 text-white font-medium rounded-full shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30 transition-shadow'
+                    >
+                        Analyze Resume
+                    </Link>
+                </motion.div>
+            </div>
         </nav>
     )
 }
