@@ -1,15 +1,15 @@
-# 🎯 AI Resume Analyzer
+# 🧠 ResuMind - AI Resume Analyzer
 
 > Get smart, AI-powered feedback on your resume to land your dream job
 
-[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://ai-resume-analyzer-142-tapyk.puter.site/)
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://resume-analyzer-30-2fmni.puter.site)
 [![React Router](https://img.shields.io/badge/React%20Router-v7-blue)](https://reactrouter.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)](https://www.typescriptlang.org/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 ## 🚀 Live Demo
 
-**[Try it now →](https://ai-resume-analyzer-142-tapyk.puter.site/)**
+**[Try ResuMind Now →](https://resume-analyzer-30-2fmni.puter.site)**
 
 ## ✨ Features
 
@@ -23,24 +23,30 @@
   - Skills Presentation
 - 🎯 **Job Match Analysis** - Compare your resume against specific job descriptions:
   - See which job keywords are matched vs. missing
-  - Get a job-specific fit score (separate from ATS score)
-  - Receive tailored suggestions for THIS specific job
-- 💡 **Actionable Tips** - Receive specific suggestions to improve your resume
-- 🎨 **Beautiful UI** - Modern, responsive design with smooth animations
+  - Get a job-specific fit score
+  - Receive tailored suggestions for the specific role
+- � **Hireability Index** - AI-powered verdict on your chances:
+  - Strong / Moderate / Weak rating
+  - Key strengths and areas to improve
+  - Personalized action items
+- 📜 **Previously Analyzed** - Instant access to recent analyses:
+  - Last 3 resumes shown on home page
+  - One-click navigation (no re-processing)
+  - Score rings and verdict chips
+- 🎨 **Premium UI** - Modern, responsive design with smooth animations
 - ☁️ **Cloud Storage** - Secure resume storage powered by Puter.js
-- 🔄 **PDF to Image Conversion** - Automatic preview generation using PDF.js
 
 ## 🛠️ Tech Stack
 
 - **Frontend Framework**: React 19 with React Router v7
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS v4
+- **Animations**: Framer Motion
 - **Cloud Platform**: [Puter.js](https://puter.com) - Cloud storage, authentication & AI
 - **AI Model**: Claude Sonnet 4 via Puter AI API
 - **PDF Processing**: PDF.js for PDF to image conversion
 - **State Management**: Zustand
 - **Build Tool**: Vite
-- **File Upload**: React Dropzone
 
 ## 📋 Prerequisites
 
@@ -78,8 +84,8 @@ http://localhost:5173
 2. **Upload Resume** - Fill in company name, job title, and job description
 3. **Drop PDF** - Drag and drop your resume or click to browse
 4. **Analyze** - Click "Analyze Resume" to get AI feedback
-5. **Review Results** - View your scores and improvement suggestions
-6. **Access History** - View previously analyzed resumes from your dashboard
+5. **Review Results** - View Hireability Index, Job Match, ATS score, and detailed feedback
+6. **Quick Access** - Return to home page to see "Previously Analyzed" resumes
 
 ## 🏗️ Project Structure
 
@@ -89,15 +95,20 @@ AI-Resume-Analyzer/
 │   ├── components/       # Reusable UI components
 │   │   ├── Navbar.tsx
 │   │   ├── ResumeCard.tsx
+│   │   ├── PreviouslyAnalyzed.tsx
+│   │   ├── HireabilityCard.tsx
+│   │   ├── JobMatch.tsx
 │   │   └── FileUploader.tsx
 │   ├── lib/             # Utility functions
 │   │   ├── puter.ts     # Puter.js integration
 │   │   ├── pdf2img.ts   # PDF conversion
+│   │   ├── jobMatchAnalyzer.ts
+│   │   ├── hireabilityAnalyzer.ts
 │   │   └── utils.ts
 │   ├── routes/          # Application routes
-│   │   ├── home.tsx
+│   │   ├── landing.tsx
 │   │   ├── upload.tsx
-│   │   └── resume.$id.tsx
+│   │   └── resume.tsx
 │   └── root.tsx
 ├── constants/           # App constants & prompts
 ├── public/             # Static assets
@@ -124,20 +135,27 @@ No additional API keys are required as Puter.js handles authentication.
 
 ## 🌟 Key Features Explained
 
-### AI Analysis
-The app uses Claude Sonnet 4 to analyze resumes based on:
-- Job Title match
-- Job Description alignment
-- ATS-friendly formatting
-- Professional tone
-- Skills relevance
-- Content quality
+### Hireability Index
+AI-powered assessment that evaluates:
+- Overall score and ATS compatibility
+- Job match percentage
+- Resume quality factors
+- Provides Strong/Moderate/Weak verdict with action items
+
+### Job Match Analysis
+Compares your resume against job descriptions:
+- Matched vs missing keywords
+- Job-specific fit percentage
+- Tailored improvement suggestions
+
+### Previously Analyzed
+Quick access to recent analyses:
+- Shows last 3 resumes on landing page
+- Color-coded score rings
+- Instant navigation (no re-processing)
 
 ### Cloud Storage
 All resumes and analysis results are stored securely in Puter.js cloud storage with user authentication.
-
-### PDF Processing
-PDF resumes are automatically converted to images for preview using PDF.js with high-quality rendering (4x scale).
 
 ## 🤝 Contributing
 
@@ -159,15 +177,17 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - GitHub: [@Abhay030](https://github.com/Abhay030)
 - Project Link: [https://github.com/Abhay030/Ai-resume-analyzer](https://github.com/Abhay030/Ai-resume-analyzer)
-- Live Demo: [https://puter.com/app/ai-resume-analyzer-142](https://ai-resume-analyzer-142-tapyk.puter.site/)
+- Live Demo: [https://resume-analyzer-30-2fmni.puter.site](https://resume-analyzer-30-2fmni.puter.site)
 
 ## 🙏 Acknowledgments
 
 - [Puter.js](https://puter.com) - For cloud infrastructure and AI services
 - [React Router](https://reactrouter.com/) - For routing and SSR
+- [Framer Motion](https://www.framer.com/motion/) - For animations
 - [PDF.js](https://mozilla.github.io/pdf.js/) - For PDF processing
 - [Tailwind CSS](https://tailwindcss.com/) - For styling
 
 ---
 
 Built with ❤️ using React Router and Puter.js
+
